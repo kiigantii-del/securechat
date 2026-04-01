@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="100%" stop-color="#E5E7EB"/>
+    </linearGradient>
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect x="8" y="8" width="176" height="176" rx="36" ry="36" fill="url(#bgGrad)" filter="url(#shadow)"/>
+
+  <!-- Subtle inner highlight -->
+  <rect x="8" y="8" width="176" height="88" rx="36" ry="36" fill="#fff" opacity="0.06"/>
+
+  <!-- Shield Icon (centered) -->
+  <g transform="translate(96, 82)">
+    <!-- Shield body -->
+    <path d="M0,-52 L42,-34 L42,4 C42,30 22,50 0,58 C-22,50 -42,30 -42,4 L-42,-34 Z"
+          fill="url(#shieldGrad)" stroke="#fff" stroke-width="2" opacity="0.95"/>
+    <!-- Inner shield border -->
+    <path d="M0,-40 L32,-26 L32,2 C32,22 16,38 0,44 C-16,38 -32,22 -32,2 L-32,-26 Z"
+          fill="none" stroke="#059669" stroke-width="2.5" opacity="0.4"/>
+    <!-- Checkmark inside shield -->
+    <polyline points="-16,2 -5,14 18,-12" fill="none" stroke="#059669" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Star Badge (top-right overlay for admin) -->
+  <g transform="translate(148, 40)">
+    <!-- Badge circle -->
+    <circle cx="0" cy="0" r="18" fill="url(#badgeGrad)" stroke="#fff" stroke-width="2.5"/>
+    <!-- Star -->
+    <polygon points="0,-10 2.9,-3.1 10,-3.1 4.5,1.2 6.9,8.1 0,4 -6.9,8.1 -4.5,1.2 -10,-3.1 -2.9,-3.1"
+             fill="#fff" transform="scale(0.85)"/>
+  </g>
+</svg>

@@ -1,0 +1,10 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "outputDirectory": ".next",
+  "env": {
+    "NEXT_PUBLIC_ADMIN_USERNAME": "admin",
+    "NEXT_PUBLIC_ADMIN_PASSWORD": "securechat_admin_2025"
+  }
+}

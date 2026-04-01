@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecureChat - PWA Icon Generator</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+      color: #10b981;
+    }
+    .subtitle {
+      text-align: center;
+      color: #94a3b8;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+    .icon-section {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .icon-section h2 {
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      color: #f1f5f9;
+    }
+    .icon-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      align-items: flex-end;
+    }
+    .icon-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      min-width: 120px;
+    }
+    .icon-card canvas {
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      image-rendering: -webkit-optimize-contrast;
+    }
+    .icon-card .size-label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.4rem;
+    }
+    .icon-card .download-btn {
+      display: inline-block;
+      background: #059669;
+      color: #fff;
+      border: none;
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .icon-card .download-btn:hover {
+      background: #047857;
+    }
+    .status {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding: 0.75rem;
+      background: #1e293b;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+    .status.error { color: #f87171; }
+    .status.success { color: #34d399; }
+  </style>
+</head>
+<body>
+  <h1>SecureChat PWA Icon Generator</h1>
+  <p class="subtitle">Generates PNG icons from SVG sources at standard PWA sizes</p>
+
+  <div id="app-icon" class="icon-section">
+    <h2>App Icon (MessageCircle + Lock)</h2>
+    <div class="icon-row" id="app-icons"></div>
+  </div>
+
+  <div id="admin-icon" class="icon-section">
+    <h2>Admin Icon (Shield)</h2>
+    <div class="icon-row" id="admin-icons"></div>
+  </div>
+
+  <div id="status" class="status"></div>
+
+  <script>
+    const ICON_SIZES = [16, 32, 48, 72, 96, 128, 144, 152, 192, 384, 512];
+
+    const ICONS = [
+      { name: 'App Icon', svg: 'icon-192x192.svg', container: 'app-icons', prefix: 'icon' },
+      { name: 'Admin Icon', svg: 'admin-icon-192x192.svg', container: 'admin-icons', prefix: 'admin-icon' },
+    ];
+
+    async function svgToCanvas(svgPath, size) {
+      const response = await fetch(svgPath);
+      if (!response.ok) throw new Error(`Failed to load ${svgPath}: ${response.status}`);
+
+      const svgText = await response.text();
+      const blob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, size, size);
+          URL.revokeObjectURL(url);
+          resolve(canvas);
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error(`Failed to render ${svgPath} at ${size}px`));
+        };
+        img.src = url;
+      });
+    }
+
+    function downloadCanvas(canvas, filename) {
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    async function generateAll() {
+      const statusEl = document.getElementById('status');
+      let errors = 0;
+      let generated = 0;
+
+      for (const icon of ICONS) {
+        const container = document.getElementById(icon.container);
+        container.innerHTML = '';
+
+        for (const size of ICON_SIZES) {
+          try {
+            const canvas = await svgToCanvas(icon.svg, size);
+
+            const card = document.createElement('div');
+            card.className = 'icon-card';
+
+            const displaySize = Math.min(size, 80);
+            canvas.style.width = displaySize + 'px';
+            canvas.style.height = displaySize + 'px';
+
+            const label = document.createElement('div');
+            label.className = 'size-label';
+            label.textContent = `${size}x${size}`;
+
+            const btn = document.createElement('a');
+            btn.className = 'download-btn';
+            btn.href = '#';
+            btn.textContent = 'Download';
+            btn.addEventListener('click', (e) => {
+              e.preventDefault();
+              downloadCanvas(canvas, `${icon.prefix}-${size}x${size}.png`);
+            });
+
+            card.appendChild(canvas);
+            card.appendChild(label);
+            card.appendChild(document.createElement('br'));
+            card.appendChild(btn);
+            container.appendChild(card);
+
+            generated++;
+          } catch (err) {
+            console.error(err);
+            errors++;
+          }
+        }
+      }
+
+      if (errors > 0) {
+        statusEl.className = 'status error';
+        statusEl.textContent = `Generated ${generated} icons with ${errors} error(s). Ensure SVGs are in the same directory as this file.`;
+      } else {
+        statusEl.className = 'status success';
+        statusEl.textContent = `Successfully generated ${generated} PNG icons. Click "Download" to save.`;
+      }
+    }
+
+    // Run on load
+    generateAll();
+  </script>
+</body>
+</html>

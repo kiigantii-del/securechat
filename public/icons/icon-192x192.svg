@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+    <linearGradient id="lockGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect x="8" y="8" width="176" height="176" rx="36" ry="36" fill="url(#bgGrad)" filter="url(#shadow)"/>
+
+  <!-- Subtle inner highlight -->
+  <rect x="8" y="8" width="176" height="88" rx="36" ry="36" fill="#fff" opacity="0.06"/>
+
+  <!-- Message Circle Icon (centered, slightly above middle) -->
+  <g transform="translate(96, 86)" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Chat bubble body -->
+    <path d="M-42,-30 C-42,-46 -30,-56 -14,-56 L14,-56 C30,-56 42,-46 42,-30 C42,-14 30,-4 14,-4 L-4,-4 L-20,14 L-20,-4 C-34,-4 -42,-14 -42,-30Z" fill="#fff" stroke="none" opacity="0.95"/>
+    <!-- Message lines inside bubble -->
+    <line x1="-24" y1="-30" x2="24" y2="-30" stroke="#047857" stroke-width="5" stroke-linecap="round"/>
+    <line x1="-24" y1="-16" x2="14" y2="-16" stroke="#047857" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Lock Badge (bottom-right overlay) -->
+  <g transform="translate(140, 142)">
+    <!-- Badge circle background -->
+    <circle cx="0" cy="0" r="22" fill="url(#lockGrad)" stroke="#fff" stroke-width="3"/>
+    <!-- Lock shackle -->
+    <path d="M-8,-10 L-8,-4 A8,8 0 0,0 8,-4 L8,-10" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+    <!-- Lock body -->
+    <rect x="-11" y="-6" width="22" height="16" rx="3" ry="3" fill="#fff"/>
+    <!-- Keyhole -->
+    <circle cx="0" cy="1" r="2.5" fill="#047857"/>
+    <rect x="-1.2" y="1" width="2.4" height="5" rx="1" fill="#047857"/>
+  </g>
+</svg>
