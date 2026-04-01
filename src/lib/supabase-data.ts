@@ -90,8 +90,8 @@ async function loginUser(
   role: 'admin' | 'user'
 ): Promise<LoginResult | null> {
   if (role === 'admin') {
-    const adminUsername = process.env.NEXT_PUBLIC_ADMIN_USERNAME || 'admin';
-    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
+    const adminUsername = process.env.NEXT_PUBLIC_ADMIN_USERNAME || 'khaleel';
+    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || '586627';
 
     if (username === adminUsername && password === adminPassword) {
       // Try to find the admin user in the database first
