@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   MessageCircle,
   Search,
@@ -21,6 +21,7 @@ import { Conversation, Message, Call, UserStatus } from '@/lib/types';
 import { ConversationList } from './conversation-list';
 import { ChatWindow } from './chat-window';
 import { CallInterface } from './call-interface';
+import { NewChatDialog } from './new-chat-dialog';
 import { useTheme } from 'next-themes';
 
 export function ChatLayout() {
@@ -49,6 +50,7 @@ export function ChatLayout() {
   } = useAppStore();
 
   const { theme, setTheme } = useTheme();
+  const [showNewChat, setShowNewChat] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<ReturnType<typeof getSocket> | null>(null);
 
@@ -172,6 +174,29 @@ export function ChatLayout() {
       {/* Call Interface Overlay */}
       {(activeCall || incomingCall) && <CallInterface />}
 
+      {/* New Chat Dialog */}
+      <NewChatDialog
+        open={showNewChat}
+        onOpenChange={setShowNewChat}
+        currentUser={currentUser}
+        onConversationCreated={async (conv) => {
+          setActiveConversation(conv);
+          setShowNewChat(false);
+          if (window.innerWidth < 768) setSidebarOpen(false);
+          // Refresh conversations list
+          try {
+            const headers = getAuthHeaders();
+            const res = await fetch(`/api/conversations?userId=${currentUser?.id}`, { headers });
+            if (res.ok) {
+              const data = await res.json();
+              setConversations(data.conversations || []);
+            }
+          } catch {
+            // Silently fail on refresh
+          }
+        }}
+      />
+
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <div
@@ -208,6 +233,15 @@ export function ChatLayout() {
             </div>
 
             <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 text-white/80 hover:text-white hover:bg-white/10"
+                onClick={() => setShowNewChat(true)}
+                title="New Chat"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
               <Button
                 variant="ghost"
                 size="icon"
